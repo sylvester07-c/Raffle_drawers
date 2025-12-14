@@ -27,24 +27,39 @@ const analytics = getAnalytics(app);
         firebase.initializeApp(firebaseConfig);
         db = firebase.database();
 
-        function loadRaffleData() {
-            db.ref('raffle').on('value', function(snapshot) {
-                if (snapshot.exists()) {
-                    var data = snapshot.val();
-                    drawnNames = data.drawnNames || [];
-                    remainingNames = data.remainingNames || [];
-                } else {
-                    drawnNames = [];
-                    remainingNames = initialNames.slice();
-                    db.ref('raffle').set({
-                        remainingNames: remainingNames,
-                        drawnNames: drawnNames
-                    });
+         function loadRaffleData() {
+            try {
+                db.ref('raffle').on('value', function(snapshot) {
+                    if (snapshot.exists()) {
+                        var data = snapshot.val();
+                        drawnNames = data.drawnNames || [];
+                        remainingNames = data.remainingNames || [];
+                    } else {
+                        drawnNames = [];
+                        remainingNames = [];
+                        for (var i = 0; i < initialNames.length; i++) {
+                            remainingNames.push(initialNames[i]);
+                        }
+                        db.ref('raffle').set({
+                            remainingNames: remainingNames,
+                            drawnNames: drawnNames
+                        });
+                    }
+                    renderNames();
+                    renderDrawnNames();
+                    document.getElementById('loadingMsg').classList.add('hidden');
+                });
+            } catch(e) {
+                console.error('Firebase error:', e);
+                drawnNames = [];
+                remainingNames = [];
+                for (var i = 0; i < initialNames.length; i++) {
+                    remainingNames.push(initialNames[i]);
                 }
                 renderNames();
                 renderDrawnNames();
                 document.getElementById('loadingMsg').classList.add('hidden');
-            });
+            }
         }
 
         function renderNames() {
@@ -125,6 +140,47 @@ const analytics = getAnalytics(app);
             });
         }
 
+        function drawName() {
+            if (remainingNames.length === 0) return;
+
+            var drawBtn = document.getElementById('drawBtn');
+            drawBtn.disabled = true;
+
+            var winnerDisplay = document.getElementById('winnerDisplay');
+            var winnerName = document.getElementById('winnerName');
+            winnerDisplay.classList.remove('hidden');
+
+            var spins = 0;
+            var spinInterval = setInterval(function() {
+                var randomIndex = Math.floor(Math.random() * remainingNames.length);
+                winnerName.textContent = remainingNames[randomIndex];
+                spins = spins + 1;
+
+                if (spins > 20) {
+                    clearInterval(spinInterval);
+                    var finalIndex = Math.floor(Math.random() * remainingNames.length);
+                    var selectedName = remainingNames[finalIndex];
+                    winnerName.textContent = selectedName;
+
+                    var newRemaining = [];
+                    for (var i = 0; i < remainingNames.length; i++) {
+                        if (remainingNames[i] !== selectedName) {
+                            newRemaining.push(remainingNames[i]);
+                        }
+                    }
+                    remainingNames = newRemaining;
+                    drawnNames.push(selectedName);
+
+                    db.ref('raffle').set({
+                        remainingNames: remainingNames,
+                        drawnNames: drawnNames
+                    });
+
+                    drawBtn.disabled = false;
+                }
+            }, 100);
+        }
+
         function resetRaffle() {
             remainingNames = initialNames.slice();
             drawnNames = [];
@@ -137,4 +193,3 @@ const analytics = getAnalytics(app);
         }
 
         loadRaffleData();
-        console.log('valid');

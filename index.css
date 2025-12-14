@@ -1,4 +1,4 @@
- * {
+   * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -130,11 +130,18 @@
             transition: all 0.3s ease;
             margin: 7px;
             animation: fadeIn 0.5s ease;
+            cursor: pointer;
         }
 
-        .name-card:hover {
+        .name-card:hover:not(.disabled) {
             transform: scale(1.05);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .name-card.disabled {
+            background: linear-gradient(135deg, #999, #666);
+            cursor: not-allowed;
+            opacity: 0.5;
         }
 
         @keyframes fadeIn {
@@ -209,6 +216,21 @@
             margin: 7px;
         }
 
+        .reset-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .reset-btn:active {
+            transform: scale(0.95);
+        }
+
         .draw-btn {
             background: linear-gradient(135deg, #ffd700, #ff69b4);
             color: #333;
@@ -227,21 +249,6 @@
         .draw-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-        }
-
-        .reset-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-        }
-
-        .reset-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
-        }
-
-        .reset-btn:active {
-            transform: scale(0.95);
         }
 
         .footer {
@@ -265,4 +272,10 @@
 
         .hidden {
             display: none;
+        }
+
+        .loading {
+            text-align: center;
+            color: #87ceeb;
+            padding: 20px;
         }
