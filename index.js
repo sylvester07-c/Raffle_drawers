@@ -3,19 +3,22 @@ var initialNames = ['Mummy', 'Daddy', 'Sylvia', 'Stepheany', 'Blessing', 'Glory'
         var drawnNames = [];
         var db = null;
 
-         // Import the functions you need from the SDKs you need
+ 
+
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-
+  
 const firebaseConfig = {
-  apiKey: "AIzaSyDW1CufMSCkRpcpXqMJkpC1PXtcN713uaM",
-  authDomain: "raffle-draw-app-de867.firebaseapp.com",
-  projectId: "raffle-draw-app-de867",
-  storageBucket: "raffle-draw-app-de867.firebasestorage.app",
-  messagingSenderId: "110652241836",
-  appId: "1:110652241836:web:9c7cca35633bcc3d3b6c09",
-  measurementId: "G-157XL2YB7Y"
+  apiKey: "AIzaSyBK9YpwOvsuYs9dVGgkq5abO00-l1w2W6Q",
+  authDomain: "raffle-drawer-app.firebaseapp.com",
+  projectId: "raffle-drawer-app",
+  storageBucket: "raffle-drawer-app.firebasestorage.app",
+  messagingSenderId: "109815525328",
+  appId: "1:109815525328:web:5107aaefdd6d48f53e53d5",
+  measurementId: "G-CTSNHL38GQ"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
