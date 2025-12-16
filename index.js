@@ -1,15 +1,9 @@
-var initialNames = ['Mummy', 'Daddy', 'Sylvia', 'Stepheany', 'Blessing', 'Glory', 'Praise', 'Grace', 'Peace', 'Riches'];
+  var initialNames = ['Mummy', 'Daddy', 'Sylvia', 'Stepheany', 'Blessing', 'Glory', 'Praise', 'Grace', 'Peace', 'Riches'];
         var remainingNames = [];
         var drawnNames = [];
         var db = null;
 
- 
-
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-  
-const firebaseConfig = {
+        const firebaseConfig = {
   apiKey: "AIzaSyBK9YpwOvsuYs9dVGgkq5abO00-l1w2W6Q",
   authDomain: "raffle-drawer-app.firebaseapp.com",
   projectId: "raffle-drawer-app",
@@ -19,46 +13,31 @@ const firebaseConfig = {
   measurementId: "G-CTSNHL38GQ"
 };
 
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
         firebase.initializeApp(firebaseConfig);
         db = firebase.database();
 
-         function loadRaffleData() {
+        function loadRaffleData() {
+            drawnNames = [];
+            remainingNames = [];
+            for (var i = 0; i < initialNames.length; i++) {
+                remainingNames.push(initialNames[i]);
+            }
+            renderNames();
+            renderDrawnNames();
+            document.getElementById('loadingMsg').classList.add('hidden');
+            
             try {
                 db.ref('raffle').on('value', function(snapshot) {
                     if (snapshot.exists()) {
                         var data = snapshot.val();
                         drawnNames = data.drawnNames || [];
                         remainingNames = data.remainingNames || [];
-                    } else {
-                        drawnNames = [];
-                        remainingNames = [];
-                        for (var i = 0; i < initialNames.length; i++) {
-                            remainingNames.push(initialNames[i]);
-                        }
-                        db.ref('raffle').set({
-                            remainingNames: remainingNames,
-                            drawnNames: drawnNames
-                        });
+                        renderNames();
+                        renderDrawnNames();
                     }
-                    renderNames();
-                    renderDrawnNames();
-                    document.getElementById('loadingMsg').classList.add('hidden');
                 });
             } catch(e) {
                 console.error('Firebase error:', e);
-                drawnNames = [];
-                remainingNames = [];
-                for (var i = 0; i < initialNames.length; i++) {
-                    remainingNames.push(initialNames[i]);
-                }
-                renderNames();
-                renderDrawnNames();
-                document.getElementById('loadingMsg').classList.add('hidden');
             }
         }
 
